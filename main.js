@@ -5,17 +5,7 @@ async function runTest(testFile) {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
 
-    if (Array.isArray(testDef.pre)) {
-      for (const step of testDef.pre) {
-        if (typeof step === "function") {
-          await step()
-        }
-      }
-    }
-
-    const { command: cmdName, args } = typeof testDef.run === "function"
-      ? testDef.run()
-      : testDef.run
+    const { command: cmdName, args } = testDef.run()
 
     const result = await command.run(cmdName, args)
 
