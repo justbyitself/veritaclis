@@ -53,6 +53,6 @@ if (import.meta.main) {
     Deno.exit(1)
   }
 
-  await runTest(testFile)
+  await runTests(testFile)
   Deno.exit(0)
 }
