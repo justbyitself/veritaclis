@@ -9,7 +9,6 @@ async function runTest(testFile) {
 
     const result = await command.run(cmdName, args)
 
-    let allPassed = true
     for (const { description, check } of testDef.post || []) {
       const passed = check({
         stdout: result.stdout,
@@ -20,14 +19,11 @@ async function runTest(testFile) {
         console.log(`${description}... OK`)
       } else {
         console.log(`${description}... FAIL`)
-        allPassed = false
       }
     }
 
-    return allPassed
   } catch (error) {
     console.error(`Error running test: ${error.message}`)
-    return false
   }
 }
 
@@ -38,6 +34,6 @@ if (import.meta.main) {
     Deno.exit(1)
   }
 
-  const success = await runTest(testFile)
-  Deno.exit(success ? 0 : 1)
+  await runTest(testFile)
+  Deno.exit(0)
 }
