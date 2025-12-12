@@ -9,6 +9,8 @@ async function runTest(testFile) {
 
     const result = await command.run(cmdName, args)
 
+    console.log(`[${testFile}]`)
+
     for (const { description, check } of testDef.post || []) {
       const passed = check({
         stdout: result.stdout,
@@ -21,16 +23,33 @@ async function runTest(testFile) {
         console.log(`${description}... FAIL`)
       }
     }
+    
+    console.log()
 
   } catch (error) {
     console.error(`Error running test: ${error.message}`)
   }
 }
 
+async function runTests(path) {
+  const info = await Deno.stat(path);
+  if (info.isFile) {
+    await runTest(path)
+  } else if (info.isDirectory) {
+    for await (const entry of Deno.readDir(path)) {
+      if (entry.isFile && entry.name.endsWith(".veritaclis.js")) {
+        await runTest(`${path}/${entry.name}`)
+      }
+    }
+  } else {
+    console.error("Path is neither file nor directory")
+  }
+}
+
 if (import.meta.main) {
   const [testFile] = Deno.args
   if (!testFile) {
-    console.error("Usage: deno run --allow-run --allow-read runner.js <testfile>")
+    console.error('Please provide a test file or directory path.')
     Deno.exit(1)
   }
 
