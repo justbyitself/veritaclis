@@ -2,12 +2,12 @@ export default {
   pre: [],
   run: () => ({
     command: 'echo',
-    args: ['hello']
+    args: ['-n', 'hello']
   }),
   post: [
     {
       description: 'stdout check',
-      check: ({stdout}) => stdout === 'hello\n'
+      check: ({stdout}) => stdout === 'hello'
     },
     {
       description: 'exit successfully',
