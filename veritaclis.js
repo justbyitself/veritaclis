@@ -39,7 +39,7 @@ async function runTest(testFile) {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
 
-    result.description = testDef.description || null
+    result.description = testDef.description
 
     result.pre = await runPreconditions(testDef.pre, context)
 
