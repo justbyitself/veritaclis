@@ -13,7 +13,6 @@ async function runTest(testFile) {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
 
-    // Evaluar precondiciones sin if, con fallback a array vacío
     for (const { description, check } of testDef.pre || []) {
       const passed = await check()
       result.pre.push({ description, passed })
@@ -22,11 +21,9 @@ async function runTest(testFile) {
       }
     }
 
-    // Ejecutar comando
     const { command: cmdName, args } = testDef.run()
     const commandResult = await command.run(cmdName, args)
 
-    // Evaluar postcondiciones sin if, con fallback a array vacío
     for (const { description, check } of testDef.post || []) {
       const passed = check({
         stdout: commandResult.stdout,
