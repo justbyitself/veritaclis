@@ -1,6 +1,7 @@
-export async function run(command, args) {
+export async function run({ command, args = [], cwd }) {
   const cmd = new Deno.Command(command, {
     args,
+    cwd,
     stdout: "piped",
     stderr: "piped",
   })

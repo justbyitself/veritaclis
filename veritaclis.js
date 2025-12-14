@@ -1,4 +1,4 @@
-import * as command from "./command.js"
+import { run as runCommand } from "./command.js"
 
 async function runPreconditions(preList) {
   const results = []
@@ -42,8 +42,7 @@ async function runTest(testFile) {
       return result
     }
 
-    const { command: cmdName, args } = testDef.run()
-    const commandResult = await command.run(cmdName, args)
+    const commandResult = await runCommand(testDef.run())
 
     result.post = runPostconditions(testDef.post, commandResult)
 
