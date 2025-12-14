@@ -7,11 +7,12 @@ export async function run(command, args) {
 
   const child = cmd.spawn()
   const output = await child.output()
-  const rawOutput = new TextDecoder().decode(output.stdout)
+  const decode = text => new TextDecoder().decode(text)
   const status = await child.status
 
   return {
-    stdout: rawOutput,
+    stdout: decode(output.stdout),
+    stderr: decode(output.stderr),
     exitCode: status.code,
     success: status.success,
   }

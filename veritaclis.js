@@ -15,11 +15,7 @@ async function runPreconditions(preList) {
 function runPostconditions(postList, commandResult) {
   const results = []
   for (const { description, check } of postList || []) {
-    const passed = check({
-      stdout: commandResult.stdout,
-      exitCode: commandResult.exitCode,
-      success: commandResult.success,
-    })
+    const passed = check(commandResult)
     results.push({ description, passed })
   }
   return results
