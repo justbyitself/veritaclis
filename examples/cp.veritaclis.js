@@ -1,4 +1,5 @@
 export default {
+  description: "cp with no arguments",
   pre: [],
   run: () => ({
     command: "cp",
