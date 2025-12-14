@@ -1,5 +1,4 @@
 export default {
-  pre: [],
   run: () => ({
     command: 'echo',
     args: ['hello']
