@@ -1,66 +1,73 @@
 import * as command from "./command.js"
 
+function reportViewer(testResult) {
+  console.log(testResult)
+}
+
 async function runTest(testFile) {
+  const result = {
+    path: testFile,
+    pre: [],
+    post: [],
+    error: null,
+  }
+
   try {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
 
-    console.log(`[${testFile}]`)
-
-    // Ejecutar precondiciones si existen
-    if (testDef.pre && testDef.pre.length > 0) {
-      for (const { description, check } of testDef.pre) {
-        const passed = await check()
-        if (!passed) {
-          console.log(`${description}... PRECONDITION FAIL - test skipped`)
-          console.log()
-          return // Salir sin ejecutar el test
-        } else {
-          console.log(`${description}... PRECONDITION OK`)
-        }
+    // Evaluar precondiciones sin if, con fallback a array vacío
+    for (const { description, check } of testDef.pre || []) {
+      const passed = await check()
+      result.pre.push({ description, passed })
+      if (!passed) {
+        return result
       }
     }
 
     // Ejecutar comando
     const { command: cmdName, args } = testDef.run()
-    const result = await command.run(cmdName, args)
+    const commandResult = await command.run(cmdName, args)
 
-    // Evaluar postcondiciones
+    // Evaluar postcondiciones sin if, con fallback a array vacío
     for (const { description, check } of testDef.post || []) {
       const passed = check({
-        stdout: result.stdout,
-        exitCode: result.exitCode,
-        success: result.success,
+        stdout: commandResult.stdout,
+        exitCode: commandResult.exitCode,
+        success: commandResult.success,
       })
-      if (passed) {
-        console.log(`${description}... OK`)
-      } else {
-        console.log(`${description}... FAIL`)
-      }
+      result.post.push({ description, passed })
     }
 
-    console.log()
+    return result
 
   } catch (error) {
-    console.error(`Error running test: ${error.message}`)
+    result.error = error.message || String(error)
+    return result
   }
 }
 
-
 async function runTests(path) {
-  const info = await Deno.stat(path);
+  const results = []
+  const info = await Deno.stat(path)
+
   if (info.isFile) {
-    await runTest(path)
+    const result = await runTest(path)
+    results.push(result)
   } else if (info.isDirectory) {
     for await (const entry of Deno.readDir(path)) {
       if (entry.isFile && entry.name.endsWith(".veritaclis.js")) {
-        await runTest(`${path}/${entry.name}`)
+        const result = await runTest(`${path}/${entry.name}`)
+        results.push(result)
       }
     }
   } else {
     console.error("Path is neither file nor directory")
   }
+
+  return results
 }
+
 
 if (import.meta.main) {
   const [testFile] = Deno.args
@@ -69,6 +76,7 @@ if (import.meta.main) {
     Deno.exit(1)
   }
 
-  await runTests(testFile)
+  const result = await runTests(testFile)
+  reportViewer(result)
   Deno.exit(0)
 }
