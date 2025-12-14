@@ -1,7 +1,8 @@
-export async function run({ command, args = [], cwd, stdin }) {
+export async function run({ command, args = [], cwd, stdin, env }) {
   const cmd = new Deno.Command(command, {
     args,
     cwd,
+    env,
     stdin: stdin ? "piped" : "null",
     stdout: "piped",
     stderr: "piped"
