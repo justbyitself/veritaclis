@@ -1,20 +1,30 @@
-export async function run({ command, args = [], cwd }) {
+export async function run({ command, args = [], cwd, stdin }) {
   const cmd = new Deno.Command(command, {
     args,
     cwd,
+    stdin: stdin ? "piped" : "null",
     stdout: "piped",
-    stderr: "piped",
+    stderr: "piped"
   })
 
   const child = cmd.spawn()
+
+  if (stdin) {
+    const writer = child.stdin.getWriter()
+    const encoder = new TextEncoder()
+    await writer.write(encoder.encode(stdin))
+    await writer.close()
+  }
+
   const output = await child.output()
-  const decode = text => new TextDecoder().decode(text)
   const status = await child.status
 
+  const decoder = new TextDecoder()
+
   return {
-    stdout: decode(output.stdout),
-    stderr: decode(output.stderr),
+    stdout: decoder.decode(output.stdout),
+    stderr: decoder.decode(output.stderr),
     exitCode: status.code,
-    success: status.success,
+    success: status.success
   }
 }
