@@ -1,5 +1,6 @@
 import { run as runCommand } from "./command.js"
 import { dirname, join } from "jsr:@std/path"
+import { walk } from "jsr:@std/fs/walk"
 
 async function runPreconditions(preList, context) {
   const results = []
@@ -31,8 +32,14 @@ async function runTest(testFile) {
     error: null,
   }
 
+  const tempDir = Deno.makeTempDirSync()
+
+  const path = relativePath => join(Deno.cwd(), dirname(testFile), relativePath)
+
   const context = {
-    file: relativePath => Deno.readTextFileSync(join(Deno.cwd(), dirname(testFile), relativePath))
+    tempDir,
+    path,
+    file: relativePath => Deno.readTextFileSync(path(relativePath))
   }
 
   try {
@@ -56,6 +63,8 @@ async function runTest(testFile) {
   } catch (error) {
     result.error = error.message || String(error)
     return result
+  } finally {
+    Deno.removeSync(tempDir, { recursive: true })
   }
 }
 
@@ -67,9 +76,9 @@ export async function run(path) {
     const result = await runTest(path)
     results.push(result)
   } else if (info.isDirectory) {
-    for await (const entry of Deno.readDir(path)) {
+    for await (const entry of walk(path)) {
       if (entry.isFile && entry.name.endsWith(".veritaclis.js")) {
-        const result = await runTest(`${path}/${entry.name}`)
+        const result = await runTest(entry.path)
         results.push(result)
       }
     }
