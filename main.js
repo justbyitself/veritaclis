@@ -1,4 +1,5 @@
 import * as command from "./command.js"
+import * as report from './report.js'
 
 function reportViewer(testResult) {
   console.log(testResult)
@@ -77,6 +78,6 @@ if (import.meta.main) {
   }
 
   const result = await runTests(testFile)
-  reportViewer(result)
+  report.viewer(result)
   Deno.exit(0)
 }
