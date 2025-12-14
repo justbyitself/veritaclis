@@ -23,6 +23,7 @@ function runPostconditions(postList, commandResult) {
 
 async function runTest(testFile) {
   const result = {
+    description: null,
     path: testFile,
     pre: [],
     post: [],
@@ -32,6 +33,8 @@ async function runTest(testFile) {
   try {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
+
+    result.description = testDef.description || null
 
     result.pre = await runPreconditions(testDef.pre)
 
