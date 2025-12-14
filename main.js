@@ -1,10 +1,6 @@
 import * as command from "./command.js"
 import * as report from './report.js'
 
-function reportViewer(testResult) {
-  console.log(testResult)
-}
-
 async function runTest(testFile) {
   const result = {
     path: testFile,
