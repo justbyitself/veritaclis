@@ -5,12 +5,27 @@ async function runTest(testFile) {
     const mod = await import(`./${testFile}`)
     const testDef = mod.default
 
-    const { command: cmdName, args } = testDef.run()
-
-    const result = await command.run(cmdName, args)
-
     console.log(`[${testFile}]`)
 
+    // Ejecutar precondiciones si existen
+    if (testDef.pre && testDef.pre.length > 0) {
+      for (const { description, check } of testDef.pre) {
+        const passed = await check()
+        if (!passed) {
+          console.log(`${description}... PRECONDITION FAIL - test skipped`)
+          console.log()
+          return // Salir sin ejecutar el test
+        } else {
+          console.log(`${description}... PRECONDITION OK`)
+        }
+      }
+    }
+
+    // Ejecutar comando
+    const { command: cmdName, args } = testDef.run()
+    const result = await command.run(cmdName, args)
+
+    // Evaluar postcondiciones
     for (const { description, check } of testDef.post || []) {
       const passed = check({
         stdout: result.stdout,
@@ -23,13 +38,14 @@ async function runTest(testFile) {
         console.log(`${description}... FAIL`)
       }
     }
-    
+
     console.log()
 
   } catch (error) {
     console.error(`Error running test: ${error.message}`)
   }
 }
+
 
 async function runTests(path) {
   const info = await Deno.stat(path);

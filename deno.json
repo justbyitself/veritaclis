@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "veritaclis": "deno run --allow-run --allow-read main.js"
+    "veritaclis": "deno run --allow-run --allow-env --allow-read main.js"
   },
   "imports": {
     "asserts": "https://deno.land/std@0.203.0/testing/asserts.ts"
