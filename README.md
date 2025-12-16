@@ -70,7 +70,7 @@ For now, you can download and use the precompiled binary for Linux:
 
 ```bash
 # Download the binary
-curl -Lo https://github.com/justbyitself/veritaclis/releases/download/v0.1/veritaclis
+curl -L -O "https://github.com/justbyitself/veritaclis/releases/download/v0.1.0/veritaclis"
 
 # make it executable
 chmd +x veritaclis 
