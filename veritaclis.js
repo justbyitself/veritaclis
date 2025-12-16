@@ -23,10 +23,10 @@ function runPostconditions(postList, context) {
   return results
 }
 
-async function runTest(testFile) {
+async function runTest(testPath) {
   const result = {
     description: null,
-    path: testFile,
+    path: testPath,
     pre: [],
     post: [],
     error: null,
@@ -34,7 +34,7 @@ async function runTest(testFile) {
 
   const tempDir = Deno.makeTempDirSync()
 
-  const path = relativePath => join(Deno.cwd(), dirname(testFile), relativePath)
+  const path = relativePath => join(Deno.cwd(), dirname(testPath), relativePath)
 
   const context = {
     tempDir,
@@ -43,7 +43,7 @@ async function runTest(testFile) {
   }
 
   try {
-    const mod = await import(`./${testFile}`)
+    const mod = await import(`./${testPath}`)
     const testDef = mod.default
 
     result.description = testDef.description
