@@ -5,7 +5,7 @@ import { walk } from "jsr:@std/fs/walk"
 async function runPreconditions(preList, context) {
   const results = []
   for (const { description, check } of preList || []) {
-    const passed = await check()
+    const passed = await check(context)
     results.push({ description, passed })
     if (!passed) {
       break
