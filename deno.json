@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "veritaclis": "deno run --allow-run --allow-env --allow-read --allow-write main.js"
+    "veritaclis": "deno run -A main.js",
+    "compile": "deno compile -A --output=bin/veritaclis main.js"
   }
 }
