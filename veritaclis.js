@@ -1,6 +1,7 @@
 import { run as runCommand } from "./command.js"
 import { dirname, join } from "jsr:@std/path"
 import { walk } from "jsr:@std/fs/walk"
+import { normalize } from "./normalizer.js"
 
 async function runPreconditions(preList, context) {
   const results = []
@@ -44,7 +45,7 @@ async function runTest(testPath) {
 
   try {
     const mod = await import(`./${testPath}`)
-    const testDef = mod.default
+    const testDef = normalize(mod.default)
 
     result.description = testDef.description
 

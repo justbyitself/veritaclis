@@ -2,5 +2,8 @@
   "tasks": {
     "veritaclis": "deno run -A main.js",
     "compile": "deno compile -A --output=bin/veritaclis main.js"
+  },
+  "imports": {
+    "asserts": "https://deno.land/std@0.203.0/testing/asserts.ts"
   }
 }
