@@ -1,11 +1,24 @@
 import { merge } from "./utils.js"
 
+function check(input, test) {
+  if (test instanceof RegExp) {
+    // If value is a RegExp, test stdout against the pattern
+    return test.test(input)
+  } else if (test === "function") {
+    // If value is a function, use it as a predicate on stdout
+    return test(input)
+  } else {
+    // Otherwise, use strict equality comparison
+    return test === input
+  }
+}
+
 const transformers = {
   stdout: value => ({
     post: [
       {
         description: 'stdout check',
-        check: ({stdout}) => stdout === value
+        check: ({stdout}) => check(stdout, value)
       }
     ]
   }),
@@ -13,7 +26,7 @@ const transformers = {
     post: [
       {
         description: 'stderr check',
-        check: ({stderr}) => stderr === value
+        check: ({stderr}) => check(stderr, value)
       }
     ]
   }),
@@ -21,7 +34,7 @@ const transformers = {
     post: [
       {
         description: 'exitCode check',
-        check: ({exitCode}) => exitCode === value
+        check: ({exitCode}) => check(exitCode, value)
       }
     ]
   }),
@@ -29,7 +42,7 @@ const transformers = {
     post: [
       {
         description: 'success check',
-        check: ({success}) => success === value
+        check: ({success}) => check(success, value)
       }
     ]
   }),
