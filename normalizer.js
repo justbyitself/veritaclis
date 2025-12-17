@@ -52,6 +52,15 @@ const transformers = {
   args: value => ({
     run: [() => ({args: value})]
   }),
+  cwd: value => ({
+    run: [() => ({cwd: value})]
+  }),
+  stdin: value => ({
+    run: [() => ({stdin: value})]
+  }),
+  env: value => ({
+    run: [() => ({env: value})]
+  }),
 }
 
 function transform(others) {
