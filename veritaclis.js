@@ -24,6 +24,13 @@ function runPostconditions(postList, context) {
   return results
 }
 
+function evaluate(funcs, input) {
+  return funcs.reduce((acc, fn) => {
+    const result = fn(input)
+    return { ...acc, ...result }
+  }, {})
+}
+
 async function runTest(testPath) {
   const result = {
     description: null,
@@ -55,7 +62,7 @@ async function runTest(testPath) {
       return result
     }
 
-    const commandResult = await runCommand(testDef.run(context))
+    const commandResult = await runCommand(evaluate(testDef.run, context))
 
     result.post = runPostconditions(testDef.post, {...context, ...commandResult})
 

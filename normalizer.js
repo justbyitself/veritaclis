@@ -41,10 +41,16 @@ const transformers = {
   success: value => ({
     post: [
       {
-        description: 'success check',
+        description: 'exit successfully',
         check: ({success}) => check(success, value)
       }
     ]
+  }),
+  command: value => ({
+    run: [() => ({command: value})]
+  }),
+  args: value => ({
+    run: [() => ({args: value})]
   }),
 }
 
@@ -62,12 +68,12 @@ export function normalize(input) {
   const {
     description,
     pre = [],
-    run,
+    run = [],
     post = [],
     ...others
   } = input
 
-  const canonical = { description, pre, run, post }
+  const canonical = { description, pre, run: [].concat(run), post }
 
   return merge(canonical, transform(others)) 
 }
