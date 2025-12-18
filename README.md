@@ -2,7 +2,19 @@
 
 # Description
 
-Veritaclis is a test runner for CLI commands. It takes as input a module that declares command invocation along with pre- and post-conditions. Here is an example:
+Veritaclis is a test runner for CLI commands. It takes as input a module that declares command invocation along with pre- and post-conditions. 
+
+Here is an example:
+```javascript
+export default {
+  command: 'echo',
+  args: ['hello'],
+  stdout: /hello/,
+  success: true
+}
+```
+
+This is equivalent to the more verbose form:
 
 ```javascript
 export default {
@@ -13,11 +25,11 @@ export default {
   post: [
     {
       description: 'stdout check',
-      check: ({stdout}) => stdout === 'hello\n'
+      check: ({stdout}) => /hello/.test(stdout)
     },
     {
       description: 'exit successfully',
-      check: ({exitCode}) => exitCode === 0
+      check: ({success}) => success === true
     }
   ]
 }
@@ -30,7 +42,7 @@ Veritaclis is built with Deno, which allows dynamic imports of npm/jsr packages 
 For example, you can import the `dir-compare` package from npm to compare directory structures:
 
 ```javascript
-import { compareSync } from "npm:dir:compare"
+import { compareSync } from "npm:dir-compare"
 
 export default {
   description: "Test mkdir p reates nested directories matching expected structure",
@@ -57,9 +69,9 @@ Veritaclis accepts either a single module file or a directory containing multipl
 When running Veritaclis with a module as a parameter, the output will look like this:
 
 ```
-#examples/echo.veritaclis.js
-  POST: wtsut check ... OK
-  POST: exit successfully ...
+examples/echo.veritaclis.js
+  POST: status check ... OK
+  POST: exit successfully ... OK
 
 Summary: 1 / 1 tests passed.
 ```
