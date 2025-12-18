@@ -5,10 +5,8 @@ export default {
     args: ["-n"],
     stdin: file("./input.txt")
   }),
-  post: [
-    {
-      description: "stdout should match the expected output",
-      check: ({ stdout, file }) => stdout === file("./expected.txt")
-    }
-  ]
+  post: {
+    description: "stdout should match expected.txt file content",
+    check: ({ stdout, file }) => stdout === file("./expected.txt")
+  }
 }
