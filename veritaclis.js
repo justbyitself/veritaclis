@@ -1,28 +1,8 @@
-import { run as runCommand } from "./command.js"
+import * as runners from "./runners/index.js"
+
 import { dirname, join } from "jsr:@std/path"
 import { walk } from "jsr:@std/fs/walk"
 import { normalize } from "./normalizer.js"
-
-async function runPreconditions(preList, context) {
-  const results = []
-  for (const { description, check } of preList || []) {
-    const passed = await check(context)
-    results.push({ description, passed })
-    if (!passed) {
-      break
-    }
-  }
-  return results
-}
-
-function runPostconditions(postList, context) {
-  const results = []
-  for (const { description, check } of postList || []) {
-    const passed = check(context)
-    results.push({ description, passed })
-  }
-  return results
-}
 
 function evaluate(funcs, input) {
   return funcs.reduce((acc, fn) => {
@@ -56,15 +36,15 @@ async function runTest(testPath) {
 
     result.description = testDef.description
 
-    result.pre = await runPreconditions(testDef.pre, context)
+    result.pre = runners.pre(testDef.pre, context)
 
     if (result.pre.some(p => !p.passed)) {
       return result
     }
 
-    const commandResult = await runCommand(evaluate(testDef.run, context))
+    const commandResult = await runners.command(evaluate(testDef.run, context))
 
-    result.post = runPostconditions(testDef.post, {...context, ...commandResult})
+    result.post = runners.post(testDef.post, {...context, ...commandResult})
 
     return result
 
