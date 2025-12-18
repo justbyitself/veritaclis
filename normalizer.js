@@ -4,7 +4,7 @@ function check(input, test) {
   if (test instanceof RegExp) {
     // If value is a RegExp, test stdout against the pattern
     return test.test(input)
-  } else if (test === "function") {
+  } else if (typeof test === "function") {
     // If value is a function, use it as a predicate on stdout
     return test(input)
   } else {
@@ -82,7 +82,12 @@ export function normalize(input) {
     ...others
   } = input
 
-  const canonical = { description, pre, run: [].concat(run), post }
+  const canonical = { 
+    description, 
+    pre: [].concat(pre), 
+    run: [].concat(run), 
+    post: [].concat(post) 
+  }
 
   return merge(canonical, transform(others)) 
 }
