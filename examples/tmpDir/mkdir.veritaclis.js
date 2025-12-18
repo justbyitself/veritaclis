@@ -1,3 +1,8 @@
+// Demonstrates creating nested directories inside a temporary directory.
+// Uses a post-condition to compare the created directory structure with an expected one.
+// Also highlights Veritaclis's ability to import and use npm packages (here, 'dir-compare')
+// to perform complex checks within tests.
+
 import { compareSync } from "npm:dir-compare"
 
 export default {

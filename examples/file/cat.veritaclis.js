@@ -1,3 +1,6 @@
+// Demonstrates using file helpers to provide input and expected output,
+// enabling file-based test assertions.
+
 export default {
   description: "Test using input and expected output files with file helper",
   run: ({ file }) => ({
