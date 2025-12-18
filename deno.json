@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "veritaclis": "deno run -A main.js",
-    "compile": "deno compile -A --output=bin/veritaclis main.js"
+    "veritaclis": "deno run -A cli.js",
+    "compile": "deno compile -A --output=bin/veritaclis cli.js"
   },
   "imports": {
     "asserts": "https://deno.land/std@0.203.0/testing/asserts.ts"
