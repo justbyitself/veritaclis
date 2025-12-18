@@ -106,8 +106,6 @@ This is version 0.1, a working MVP. While the core functionality is in place, th
 
 # TODO
 
-- Enhance documentation
-- Add automated tests for Veritaclis itself 
-- Add support for more complex test scenarios  
-- Improve CLI options and usability 
+- Add YAML support
 - Provide installation instructions for other platforms 
+- Improve CLI options and usability 
