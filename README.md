@@ -98,11 +98,7 @@ chmd +x veritaclis
 
 # Examples
 
-The repository includes an [examples](https://github.com/USER/REPO/tree/main/examples) directory with multiple sample modules demonstrating how to use Veritaclis. These examples cover different commands and test scenarios to help you get started quickly.
-
-# Status
-
-This is version 0.1, a working MVP. While the core functionality is in place, there is still much to improve and add.
+The repository includes an [examples](https://github.com/justbyitself/veritaclis/tree/main/examples) directory with multiple sample modules demonstrating how to use Veritaclis. These examples cover different commands and test scenarios to help you get started quickly.
 
 # TODO
 
