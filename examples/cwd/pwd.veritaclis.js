@@ -3,5 +3,5 @@ export default {
   command: "pwd",
   cwd: "/tmp",
   stdout: "/tmp\n",
-  success: true
+  exitCode: 0
 }
