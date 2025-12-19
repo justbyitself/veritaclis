@@ -5,7 +5,7 @@
 
 # Attributes
 
-## Normal attributes
+## Standard attributes
 
 - **description**: Human-readable test description ([examples/basic/echo.veritaclis.js](https://github.com/your_user/veritaclis/blob/main/examples/basic/echo.veritaclis.js))
 - **pre**: Pre-conditions to verify before running the command ([examples/pre/echo.veritaclis.js](https://github.com/your_user/veritaclis/blob/main/examples/pre/echo.veritaclis.js))
