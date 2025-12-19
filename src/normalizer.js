@@ -1,15 +1,5 @@
-import { merge } from "./utils.js"
+import { merge, applyWith } from "./utils.js"
 import * as transformers from "./transformers/attributes.js"
-
-function transform(others) {
-  return Object.entries(others).reduce((acc, [key, value]) => {
-    if (key in transformers) {
-      const result = transformers[key](value)
-      return merge(acc, result)
-    }
-    return acc
-  }, {})
-}
 
 export function normalize(input) {
   const {
@@ -27,5 +17,5 @@ export function normalize(input) {
     post: [].concat(post) 
   }
 
-  return merge(canonical, transform(others)) 
+  return merge(canonical, applyWith(transformers, others))
 }

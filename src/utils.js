@@ -3,10 +3,6 @@ function isObject(obj) {
 }
 
 export function merge(target, source) {
-  //console.log('target', target)
-  //console.log('source', source)
- 
-
   const output = { ...target }
 
   if (isObject(target) && isObject(source)) {
@@ -22,4 +18,12 @@ export function merge(target, source) {
   }
 
   return output
+}
+
+export function applyWith(handlers, entries, mergeFn = merge) {
+  return Object.entries(entries)
+    .filter(([key]) => typeof handlers[key] === 'function')
+    .map(([key, value]) => handlers[key](value))
+    .filter(result => result !== undefined)
+    .reduce((acc, result) => mergeFn(acc, result), {})
 }
