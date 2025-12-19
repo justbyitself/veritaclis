@@ -65,7 +65,7 @@ export async function run(path) {
   const info = await Deno.stat(path)
 
   if (info.isFile) {
-    const result = await runTest(path)
+    const result = await runTest(resolve(path))
     results.push(result)
   } else if (info.isDirectory) {
     for await (const entry of walk(path, { exts: ["veritaclis.js"], includeDirs: false })) {
