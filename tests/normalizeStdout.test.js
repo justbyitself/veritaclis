@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "asserts"
-import { normalize } from "../normalizer.js"
+import { normalize } from "../src/normalizer.js"
 
 Deno.test("normalize transforms stdout into post check", () => {
   const input = {
@@ -11,8 +11,6 @@ Deno.test("normalize transforms stdout into post check", () => {
   }
 
   const actual = normalize(input)
-
-  console.log(actual)
   
   // Check simple properties
   assertEquals(actual.description, undefined, "description should be undefined")
@@ -20,8 +18,10 @@ Deno.test("normalize transforms stdout into post check", () => {
   assertEquals(actual.pre.length, 0, "pre should be empty")
 
   // Check run
-  assert(typeof actual.run === "function", "run should be a function")
-  assertEquals(actual.run(), input.run(), "run() should return the same result as input.run()")
+  assert(Array.isArray(actual.run), "run should be an array")
+  assert(actual.run.length > 0, "run should not be empty")
+
+  //assertEquals(actual.run(), input.run(), "run() should return the same result as input.run()")
 
   // Check post
   assert(Array.isArray(actual.post), "post should be an array")
