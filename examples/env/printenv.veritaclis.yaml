@@ -1,0 +1,6 @@
+description: Test printenv with environment variables
+command: printenv
+env:
+  FOO_VAR: Veritaclis
+  BAR_VAR: Veritaclis
+success: true

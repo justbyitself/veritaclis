@@ -1,0 +1,9 @@
+# Tests passing input via stdin and validating that the command echoes it back.
+
+description: Echo input via stdin
+command: cat
+stdin: |
+  Hello, stdin!
+stdout: |
+  Hello, stdin!
+success: true

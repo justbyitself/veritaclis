@@ -1,0 +1,4 @@
+shell: echo "hello world"
+stdout: |
+  hello world
+success: true
