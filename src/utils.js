@@ -1,4 +1,4 @@
-import { dirname, resolve } from "jsr:@std/path"
+import { dirname, resolve, extname } from "jsr:@std/path"
 import { walk } from "jsr:@std/fs/walk"
 
 function isObject(obj) {
@@ -35,12 +35,14 @@ export async function applyWith(handlers, entries, mergeFn = merge) {
   return filteredResults.reduce((acc, result) => mergeFn(acc, result), {})
 }
 
-export async function collectEntries(path, exts) {
+export async function collectEntries(path, suffixes) {
   const entries = []
   for await (const entry of walk(path, { includeDirs: false })) {
-    const ext = extname(entry.name).slice(1)
-    if (exts.includes(ext)) {
-      entries.push(resolve(entry.path))
+    for (const suffix of suffixes) {
+      if (entry.name.endsWith(suffix)) {
+        entries.push(resolve(entry.path))
+        break
+      }
     }
   }
   return entries
