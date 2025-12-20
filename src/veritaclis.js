@@ -13,7 +13,7 @@ function evaluate(funcs, input) {
 }
 
 function createContext({absolutePath,  tempDir}) {
-  const path = relativePath => join(dirname(absolutePath), relativePath)
+  const path = relativePath => join(absolutePath, relativePath)
 
   return {
     tempDir,
@@ -44,7 +44,8 @@ export async function run(path) {
     entries => groupAndSortByExtensions(entries, exts)
   )
 
-  const fileGroups = info.isFile ? [[resolve(path)]] : toGroupedPaths(path)
+  const absolutePath = resolve(path)
+  const fileGroups = info.isFile ? [[absolutePath]] : await toGroupedPaths(absolutePath)
 
   const results = await Promise.all(
     fileGroups.map(files => processFiles(files))
@@ -65,7 +66,7 @@ async function runTest(testDef, files) {
   }
 
   const tempDir = Deno.makeTempDirSync()
-  const context = createContext({path,  tempDir})
+  const context = createContext({absolutePath: path,  tempDir})
 
   try {
     result.description = testDef.description
