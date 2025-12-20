@@ -1,5 +1,5 @@
 import { merge, applyWith } from "./utils.js"
-import * as transformers from "./transformers/attributes.js"
+import * as transformers from "./transformers/attributes/index.js"
 
 export async function normalize(input) {
   const {
