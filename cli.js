@@ -9,8 +9,12 @@ if (import.meta.main) {
     Deno.exit(1)
   }
 
-  const result = await veritaclis.run(path)
-  report.viewer(result)
-
-  Deno.exit(0)
+  try {
+    const result = await veritaclis.run(path)
+    report.viewer(result)
+    Deno.exit(0)
+  } catch (error) {
+    console.error('Error:', error.message)
+    Deno.exit(1)
+  }
 }
