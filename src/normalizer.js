@@ -1,7 +1,7 @@
 import { merge, applyWith } from "./utils.js"
 import * as transformers from "./transformers/attributes.js"
 
-export function normalize(input) {
+export async function normalize(input) {
   const {
     description,
     pre = [],
@@ -17,5 +17,5 @@ export function normalize(input) {
     post: [].concat(post) 
   }
 
-  return merge(canonical, applyWith(transformers, others))
+  return merge(canonical, await applyWith(transformers, others))
 }
