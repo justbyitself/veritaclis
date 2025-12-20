@@ -1,6 +1,5 @@
 export default {
-  command: 'echo',
-  args: ['hello'],
-  stdout: /hello/,
+  shell: 'echo hello',
+  stdout: 'hello\n',
   success: true
 }
