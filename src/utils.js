@@ -1,5 +1,5 @@
-import { dirname, resolve, extname } from "jsr:@std/path"
-import { walk } from "jsr:@std/fs/walk"
+import { dirname, resolve, extname } from "jsr:@std/path@1.1.2"
+import { walk } from "jsr:@std/fs@1.0.19/walk"
 
 function isObject(obj) {
   return obj && typeof obj === 'object' && !Array.isArray(obj)

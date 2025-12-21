@@ -1,4 +1,4 @@
-import { green, gray, red, yellow, cyan, bold } from "https://deno.land/std/fmt/colors.ts"
+import { green, gray, red, yellow, cyan, bold } from "jsr:@std/fmt@1/colors"
 
 export function view(report) {
   for (const testResult of report.results) {

@@ -3,7 +3,7 @@ import { normalize } from "./normalizer.js"
 import { loader } from "./loader.js"
 import { pipe, collectEntries, sortEntriesAlphabetically, groupAndSortByExtensions } from "./utils.js"
 
-import { dirname, join, resolve } from "jsr:@std/path"
+import { dirname, join, resolve } from "jsr:@std/path@1.1.2"
 
 function evaluate(funcs, input) {
   return funcs.reduce((acc, fn) => {

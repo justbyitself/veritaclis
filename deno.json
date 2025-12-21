@@ -13,6 +13,6 @@
     "compile": "deno task compile:linux && deno task compile:mac && deno task compile:windows"
   },
   "imports": {
-    "asserts": "https://deno.land/std@0.203.0/testing/asserts.ts"
+    "asserts": "jsr:@std/testing@0.203.0/asserts"
   }
 }
