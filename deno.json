@@ -1,4 +1,10 @@
 {
+  "name": "@justbyitself/veritaclis",
+  "version": "0.3.0",
+  "description": "Veritaclis CLI tool",
+  "exports": {
+    ".": "./cli.js"
+  },
   "tasks": {
     "veritaclis": "deno run -A cli.js",
     "compile:linux": "deno compile -A --output=bin/veritaclis-x86_64-linux cli.js",

@@ -1,3 +1,5 @@
+#!/usr/bin/env -S deno run --allow-all
+
 import * as veritaclis from './src/veritaclis.js'
 import * as report from './src/report/index.js'
 
