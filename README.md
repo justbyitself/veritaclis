@@ -1,7 +1,7 @@
 <img src="./logo.svg" alt="Veritaclis Logo" style="width: 100%;" />
 
 
-## Desciption
+## Description
 
 Veritaclis is a test runner for CLI commands. It aims to simplify writing tests by making them more concise and less verbose, allowing developers to focus on the essential parts of their command-line interface testing without unnecessary boilerplate.
 
@@ -37,6 +37,8 @@ Summary: 1 / 1 tests passed.
 
 ## Installation
 
+### Precompiled Binaries
+
 You can [download](https://github.com/justbyitself/veritaclis/releases/latest) and use the precompiled binaries for Linux, macOS, and Windows from the latest GitHub releases.
 
 For example, in Linux:
@@ -50,6 +52,20 @@ chmod +x veritaclis
 
 # Run it
 ./veritaclis [module or directory]
+```
+### Running with Deno
+
+If you have [Deno](https://deno.com/) installed, you can run Veritaclis using the following methods:
+
+```bash
+# Option 1: Using deno run
+deno run -A jsr:@justbyitself/veritaclis [module or directory]
+
+# Option 2: Using deno x (Deno 2.6+)
+deno x jsr:@justbyitself/veritaclis [module or directory]
+
+# Option 3: Using dx shorthand (Deno 2.6+)
+dx jsr:@justbyitself/veritaclis [module or directory]
 ```
 
 ## A More Advanced Example
@@ -76,7 +92,7 @@ For example, you can import the `dir-compare` package from npm to compare direct
 import { compareSync } from "npm:dir-compare"
 
 export default {
-  description: "Test mkdir p reates nested directories matching expected structure",
+  description: "Test mkdir -p creates nested directories matching expected structure",
   run: ({ tempDir }) =>({
     command: "mkdir",
     args: ["-p", "a/b/c"],
