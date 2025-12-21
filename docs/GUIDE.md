@@ -82,4 +82,30 @@ Context includes:
 
 This makes tests more dynamic and expressive by providing runtime information and utilities.
 
+## Veritaclis CLI
 
+Veritaclis is a command-line tool that accepts a single parameter: a file path or a directory path containing test modules.
+
+### Usage
+
+```bash
+veritaclis <filePath|directoryPath>
+```
+- `<filePath|directoryPath>`: Path to a single test module file (e.g., `test.veritaclis.yaml` or `test.veritaclis.js`) or a directory containing multiple test modules. When a directory is provided, Veritaclis will run all test modules it finds inside.
+
+
+### Exit Codes
+
+Veritaclis uses exit codes to indicate the result of running tests. These codes can be useful for automation, CI/CD pipelines, or scripting.
+
+| Exit Code | Meaning                                | Description                                                                                     |
+|-----------|--------------------------------------|-------------------------------------------------------------------------------------------------|
+| 0         | Success                              | All tests passed successfully without errors.                                                  |
+| 1         | Test Failures                       | One or more tests failed (unexpected output or behavior).                                      |
+| 2         | Runner Error                        | An internal error occurred in Veritaclis, such as a configuration issue, parsing error, or incorrect CLI usage. |
+
+When using Veritaclis in scripts or automation, you can check the exit code to determine the next steps. For example:
+
+```bash
+veritaclis tests || echo "Some tests failed or an error occurred."
+```
