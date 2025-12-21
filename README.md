@@ -1,41 +1,72 @@
 <img src="./logo.svg" alt="Veritaclis Logo" style="width: 100%;" />
 
-# Description
 
-Veritaclis is a test runner for CLI commands. It takes as input a module that declares command invocation along with pre- and post-conditions. 
+## Desciption
 
-Here is an example:
+Veritaclis is a test runner for CLI commands. It aims to simplify writing tests by making them more concise and less verbose, allowing developers to focus on the essential parts of their command-line interface testing without unnecessary boilerplate.
+
+## Simple Test Example
+
+Create a file named `echo.veritaclis.yaml` with the following content:
+
+```yaml
+shell: echo "hello world"
+stdout: |
+  hello world
+success: true
+```
+
+This test runs the command echo "hello world", expects the output to be exactly "hello world" followed by a newline, and expects the command to succeed.
+
+## Running the Test
+
+Use the Veritaclis CLI to run the test:
+
+```bash
+veritaclis echo.veritaclis.yaml
+```
+When you run the command, you should see output similar to this:
+
+```
+echo.veritaclis.yaml
+  POST: stdout check ... OK
+  POST: success check ... OK
+
+Summary: 1 / 1 tests passed.
+```
+
+## Installation
+
+You can [download](https://github.com/justbyitself/veritaclis/releases/latest) and use the precompiled binaries for Linux, macOS, and Windows from the latest GitHub releases.
+
+For example, in Linux:
+
+```bash
+# Download the binary
+curl -L -o veritaclis "https://github.com/justbyitself/veritaclis/releases/latest/download/veritaclis"
+
+# Make it executable
+chmod +x veritaclis
+
+# Run it
+./veritaclis [module or directory]
+```
+
+## A More Advanced Example
+
+You can write tests in JavaScript to take advantage of dynamic checks and more complex logic. For example:
+
 ```javascript
 export default {
-  command: 'echo',
-  args: ['hello'],
-  stdout: /hello/,
+  shell: 'echo "hello world"',
+  stdout: out => out.includes('hello world'),
   success: true
 }
 ```
 
-This is equivalent to the more verbose form:
+This example checks the behavior of echo, similarly to the previous YAML example, with the advantage that you have the full power of the JavaScript language (such as the includes function).
 
-```javascript
-export default {
-  run: () => {
-    command: 'echo',
-    args: ['hello']
-  },
-  post: [
-    {
-      description: 'stdout check',
-      check: ({stdout}) => /hello/.test(stdout)
-    },
-    {
-      description: 'exit successfully',
-      check: ({success}) => success === true
-    }
-  ]
-}
-```
-
-# Deno and Dynamic Imports
+## Deno and Dynamic Imports
 
 Veritaclis is built with Deno, which allows dynamic imports of npm/jsr packages directly inside your test modules. This enables powerful and flexible test scenarios using external libraries without extra setup.
 
@@ -62,46 +93,19 @@ export default {
 
 This feature leverages Deno's native support for npm/jsr modules and dynamic imports, making Veritaclis highly extensible.
 
-# Usage
+## Usage
 
-Veritaclis accepts either a single module file or a directory containing multiple *.veritaclis.js modules. Running Veritaclis on a directory will execute all tests in all *.veritaclis.js files found.
-
-When running Veritaclis with a module as a parameter, the output will look like this:
-
-```
-examples/echo.veritaclis.js
-  POST: status check ... OK
-  POST: exit successfully ... OK
-
-Summary: 1 / 1 tests passed.
-```
-
-# Installation
-
-For now, you can download and use the precompiled binary for Linux:
+Veritaclis accepts either a single module file or a directory containing multiple *.veritaclis.js or *.veritaclis.yaml modules. Running Veritaclis on a directory will execute all tests it finds.
 
 ```bash
-# Download the binary
-curl -L -O "https://github.com/justbyitself/veritaclis/releases/latest/download/veritaclis"
+# Run a single test module
+veritaclis echo.veritaclis.yaml
 
-# make it executable
-chmd +x veritaclis 
-
-# run it
-./veritaclis [module or directory]
+# Run all example tests in the repository
+veritaclis examples
 ```
-# Requirements
 
-- Currently, Veritaclis supports *Linux* only.
-- No additional prerequisites or dependencies are required to run the precompiled binary.
-- Support for *Windows * and *MacOS" is planned for future releases.
-
-# Examples
+## Examples
 
 The repository includes an [examples](https://github.com/justbyitself/veritaclis/tree/main/examples) directory with multiple sample modules demonstrating how to use Veritaclis. These examples cover different commands and test scenarios to help you get started quickly.
 
-# TODO
-
-- Add YAML support
-- Provide installation instructions for other platforms 
-- Improve CLI options and usability 
