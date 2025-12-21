@@ -1,1 +1,1 @@
-export default async (filePath) => (await import(filePath)).default
+export default async (filePath) => (await import('file://' + filePath)).default
