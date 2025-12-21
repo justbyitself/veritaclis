@@ -1,7 +1,10 @@
 {
   "tasks": {
     "veritaclis": "deno run -A cli.js",
-    "compile": "deno compile -A --output=bin/veritaclis cli.js"
+    "compile:linux": "deno compile -A --output=bin/veritaclis-x86_64-linux cli.js",
+    "compile:mac": "deno compile -A --output=bin/veritaclis-x86_64-macos cli.js",
+    "compile:windows": "deno compile -A --output=bin/veritaclis-x86_64-windows.exe --target x86_64-pc-windows-msvc cli.js",
+    "compile": "deno task compile:linux && deno task compile:mac && deno task compile:windows"
   },
   "imports": {
     "asserts": "https://deno.land/std@0.203.0/testing/asserts.ts"
