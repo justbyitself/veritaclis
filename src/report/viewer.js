@@ -1,9 +1,9 @@
 import { green, gray, red, yellow, cyan, bold } from "https://deno.land/std/fmt/colors.ts"
 
-export function viewer(results) {
-  for (const testResult of results) {
+export function view(report) {
+  for (const testResult of report.results) {
     console.log(cyan(bold(testResult.path)))
-    
+
     if (testResult.description) {
       console.log(gray(testResult.description))
     }
@@ -12,7 +12,7 @@ export function viewer(results) {
       console.log(`  PRE: ${pre.description} ... ${pre.passed ? green("OK") : red("FAIL")}`)
     }
 
-    if (testResult.pre.some(p => !p.passed)) {
+    if (testResult.skipped) {
       console.log(yellow("  Test skipped due to failed precondition(s)."))
       console.log()
       continue
@@ -29,7 +29,7 @@ export function viewer(results) {
     console.log()
   }
 
-  const total = results.length
-  const passed = results.filter(r => r.pre.every(p => p.passed) && r.post.every(p => p.passed) && !r.error).length
-  console.log(bold(`Summary: ${passed} / ${total} tests passed.`))
+  const summaryText = `Summary: ${report.passedTests} / ${report.totalTests} tests passed.`
+  const color = report.allPassed ? green : red
+  console.log(color(bold(summaryText)))
 }
