@@ -1,5 +1,4 @@
-import { dirname, resolve, extname } from "jsr:@std/path@1.1.2"
-import { walk } from "jsr:@std/fs@1.0.19/walk"
+import { extname, basename } from "jsr:@std/path@1.1.2"
 
 function isObject(obj) {
   return obj && typeof obj === 'object' && !Array.isArray(obj)
@@ -35,55 +34,57 @@ export async function applyWith(handlers, entries, mergeFn = merge) {
   return filteredResults.reduce((acc, result) => mergeFn(acc, result), {})
 }
 
-export async function collectEntries(path, suffixes) {
-  const entries = []
-  for await (const entry of walk(path, { includeDirs: false })) {
-    for (const suffix of suffixes) {
-      if (entry.name.endsWith(suffix)) {
-        entries.push(resolve(entry.path))
-        break
-      }
-    }
-  }
-  return entries
+export const map = (list, f) => list.map(f)
+
+const ext = path => extname(path).slice(1).toLowerCase()
+
+export const sort = list => Array.from(list).sort((a, b) => a.localeCompare(b))
+
+const removeExtension = path => basename(path, extname(path))
+
+export const samePathWithoutExtension = (a, b) => removeExtension(a) === removeExtension(b)
+
+export const groupByExtension = list => groupWith(samePathWithoutExtension, list)
+
+export const groupWith = (fn, list) =>
+  list.reduce((acc, current) => {
+    if (acc.length === 0) return [[current]]
+    const lastGroup = acc[acc.length - 1]
+    return fn(lastGroup[lastGroup.length - 1], current)
+      ? [...acc.slice(0, -1), [...lastGroup, current]]
+      : [...acc, [current]]
+  }, [])
+
+const priorityMap = list => {
+  const map = new Map()
+  list.forEach((ext, i) => map.set(ext.toLowerCase(), i))
+  return map
 }
 
-export function sortEntriesAlphabetically(entries) {
-  return entries.sort((a, b) => a.localeCompare(b))
-}
+export function sortByExtensions(files, extensions) {
+  const priorities = priorityMap(extensions)
 
-export function groupAndSortByExtensions(entries, exts) {
-  const groups = new Map()
+  const getPriority = e => priorities.has(e) 
+    ? priorities.get(e) 
+    : Number.POSITIVE_INFINITY
 
-  for (const filePath of entries) {
-    const dir = dirname(filePath)
-    if (!groups.has(dir)) {
-      groups.set(dir, [])
-    }
-    groups.get(dir).push(filePath)
-  }
+  return [...files].sort((a, b) => {
+    const extA = ext(a)
+    const extB = ext(b)
+    const priorityA = getPriority(extA)
+    const priorityB = getPriority(extB)
 
-  const groupedTuples = []
-  for (const files of groups.values()) {
-    files.sort((a, b) => {
-      const extA = extname(a).slice(1)
-      const extB = extname(b).slice(1)
-      return exts.indexOf(extA) - exts.indexOf(extB)
-    })
-
-    for (let i = 0; i < files.length; i += exts.length) {
-      groupedTuples.push(files.slice(i, i + exts.length))
-    }
-  }
-
-  return groupedTuples
+    if (priorityA !== priorityB) return priorityA - priorityB                     
+    if (extA !== extB) return extA.localeCompare(extB)       
+    return a.localeCompare(b)
+  })
 }
 
 export function pipe(...fns) {
-  return async (input) => {
+  return (input) => {
     let result = input
     for (const fn of fns) {
-      result = await fn(result)
+      result = fn(result)
     }
     return result
   }

@@ -1,9 +1,10 @@
 import * as runners from "./runners/index.js"
 import { normalize } from "./normalizer.js"
 import { loader } from "./loader.js"
-import { pipe, collectEntries, sortEntriesAlphabetically, groupAndSortByExtensions } from "./utils.js"
+import { pipe, map, sort, groupByExtension } from "./utils.js"
 
 import { dirname, join, resolve } from "jsr:@std/path@1.1.2"
+import { walkSync } from "jsr:@std/fs@1.0.19/walk"
 
 function evaluate(funcs, input) {
   return funcs.reduce((acc, fn) => {
@@ -38,14 +39,24 @@ export async function run(path) {
 
   const exts = ["veritaclis.yaml", "veritaclis.js"]
 
+  /*
   const toGroupedPaths = pipe(
     path => collectEntries(path, exts),
     sortEntriesAlphabetically,
     entries => groupAndSortByExtensions(entries, exts)
   )
+    */
 
+  const group = pipe(
+    path => walkSync(path, { includeDirs: false, match: [/veritaclis\.[^.]+$/]}),
+    entries => Array.from(entries),
+    entries => map(entries, e => e.path),
+    sort,
+    groupByExtension
+  )
   const absolutePath = resolve(path)
-  const fileGroups = info.isFile ? [[absolutePath]] : await toGroupedPaths(absolutePath)
+
+  const fileGroups = info.isFile ? [[absolutePath]] : group(absolutePath)
 
   const results = await Promise.all(
     fileGroups.map(files => processFiles(files))
