@@ -45,7 +45,7 @@ For example, in Linux:
 
 ```bash
 # Download the binary
-curl -L -o veritaclis "https://github.com/justbyitself/veritaclis/releases/latest/download/veritaclis-x86_64-linux "
+curl -L -o veritaclis "https://github.com/justbyitself/veritaclis/releases/latest/download/veritaclis-x86_64-linux"
 
 # Make it executable
 chmod +x veritaclis
