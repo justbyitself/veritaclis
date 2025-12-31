@@ -1,4 +1,4 @@
-import { load } from "jsr:@justbyitself/modulia"
+import { load } from "jsr:@justbyitself/modulia@0.1.1"
 import { sortByExtensions } from "./utils.js"
 
 export async function loader(files) {
