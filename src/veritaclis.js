@@ -37,16 +37,6 @@ export async function run(path) {
     throw new Error(`Path is neither a file nor a directory: ${path}`)
   }
 
-  const exts = ["veritaclis.yaml", "veritaclis.js"]
-
-  /*
-  const toGroupedPaths = pipe(
-    path => collectEntries(path, exts),
-    sortEntriesAlphabetically,
-    entries => groupAndSortByExtensions(entries, exts)
-  )
-    */
-
   const group = pipe(
     path => walkSync(path, { includeDirs: false, match: [/veritaclis\.[^.]+$/]}),
     entries => Array.from(entries),
