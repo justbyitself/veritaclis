@@ -58,7 +58,7 @@ export async function run(path) {
 async function runTest(testDef, files) {
   const path = resolve(dirname(files[0]))
 
-  const result = {
+  const report = {
     description: null,
     path,
     pre: [],
@@ -70,22 +70,21 @@ async function runTest(testDef, files) {
   const context = createContext({absolutePath: path,  tempDir})
 
   try {
-    result.description = testDef.description
+    report.description = testDef.description
 
-    result.pre = runners.pre(testDef.pre, context)
-    if (result.pre.some(p => !p.passed)) {
-      return result
+    report.pre = runners.pre(testDef.pre, context)
+    if (report.pre.some(p => !p.passed)) {
+      return report
     }
 
     const commandResult = await runners.command(evaluate(testDef.run, context))
 
-    result.post = runners.post(testDef.post, {...context, ...commandResult})
-
-    return result
+    report.post = runners.post(testDef.post, {...context, ...commandResult})
   } catch (error) {
-    result.error = error.message || String(error)
-    return result
+    report.error = error.message || String(error)
   } finally {
     Deno.removeSync(tempDir, { recursive: true })
   }
+  
+  return report
 }
