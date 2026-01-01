@@ -2,7 +2,7 @@ import { green, gray, red, yellow, cyan, bold } from "jsr:@std/fmt@1/colors"
 
 export function view(report) {
   for (const testResult of report.results) {
-    console.log(cyan(bold(testResult.path)))
+    console.log(cyan(bold(testResult.header)))
 
     if (testResult.description) {
       console.log(gray(testResult.description))

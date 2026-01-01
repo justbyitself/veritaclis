@@ -3,7 +3,7 @@ import { normalize } from "./normalizer.js"
 import { loader } from "./loader.js"
 import { pipe, map, sort, groupByExtension } from "./utils.js"
 
-import { dirname, join, resolve } from "jsr:@std/path@1.1.2"
+import { dirname, join, resolve, relative, basename } from "jsr:@std/path@1.1.2"
 import { walkSync } from "jsr:@std/fs@1.0.19/walk"
 
 function evaluate(funcs, input) {
@@ -57,8 +57,10 @@ export async function run(path) {
 
 async function runTest(testDef, files) {
   const path = resolve(dirname(files[0]))
+  const header = `${relative(Deno.cwd(), path)}: ${files.map(f => basename(f)).join(',')}`
 
   const report = {
+    header,
     description: null,
     path,
     pre: [],
@@ -73,13 +75,10 @@ async function runTest(testDef, files) {
     report.description = testDef.description
 
     report.pre = runners.pre(testDef.pre, context)
-    if (report.pre.some(p => !p.passed)) {
-      return report
+    if (report.pre.every(p => p.passed)) {
+      const commandResult = await runners.command(evaluate(testDef.run, context))
+      report.post = runners.post(testDef.post, {...context, ...commandResult})      
     }
-
-    const commandResult = await runners.command(evaluate(testDef.run, context))
-
-    report.post = runners.post(testDef.post, {...context, ...commandResult})
   } catch (error) {
     report.error = error.message || String(error)
   } finally {
